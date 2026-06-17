@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programa de Aliados — Forhuman</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --fh-dark: #0E1117;
+    --fh-mid: #1C2230;
+    --fh-border: rgba(255,255,255,0.08);
+    --fh-muted: rgba(255,255,255,0.45);
+    --fh-text: rgba(255,255,255,0.90);
+    --fh-accent: #4FFFB0;
+    --fh-accent-dim: rgba(79,255,176,0.12);
+    --fh-amber: #FFB84F;
+    --fh-amber-dim: rgba(255,184,79,0.12);
+    --fh-blue: #4FB3FF;
+    --fh-blue-dim: rgba(79,179,255,0.12);
+    --fh-radius: 14px;
+    --fh-radius-sm: 8px;
+  }
+
+  body {
+    background: var(--fh-dark);
+    color: var(--fh-text);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  a { color: var(--fh-accent); text-decoration: none; }
+
+  /* ── NAV ── */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 2rem;
+    border-bottom: 0.5px solid var(--fh-border);
+    position: sticky; top: 0;
+    background: rgba(14,17,23,0.92);
+    backdrop-filter: blur(12px);
+    z-index: 10;
+  }
+  .nav-brand { display: flex; align-items: center; gap: 10px; }
+  .nav-logo {
+    width: 32px; height: 32px;
+    background: var(--fh-accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px; font-weight: 500;
+    color: var(--fh-dark);
+    letter-spacing: -0.5px;
+  }
+  .nav-name { font-size: 15px; font-weight: 500; color: var(--fh-text); }
+  .nav-name span { color: var(--fh-muted); font-weight: 300; }
+  .nav-pill {
+    font-size: 12px; padding: 5px 14px;
+    background: var(--fh-accent-dim);
+    color: var(--fh-accent);
+    border-radius: 100px;
+    border: 0.5px solid rgba(79,255,176,0.25);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 5rem 2rem 3rem;
+    text-align: center;
+  }
+  .hero-eyebrow {
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.12em;
+    color: var(--fh-accent);
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 300;
+    line-height: 1.15;
+    color: var(--fh-text);
+    margin-bottom: 1.25rem;
+  }
+  .hero h1 strong {
+    font-weight: 500;
+    color: #fff;
+  }
+  .hero-sub {
+    font-size: 17px;
+    color: var(--fh-muted);
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    font-weight: 300;
+  }
+
+  /* ── CALCULATOR SECTION ── */
+  .calc-section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+  .calc-card {
+    background: var(--fh-mid);
+    border: 0.5px solid var(--fh-border);
+    border-radius: var(--fh-radius);
+    padding: 2rem;
+  }
+  .calc-title {
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    color: var(--fh-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.75rem;
+  }
+
+  .inputs-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  @media (max-width: 640px) { .inputs-row { grid-template-columns: 1fr; } }
+
+  .input-group label {
+    display: block;
+    font-size: 12px;
+    color: var(--fh-muted);
+    margin-bottom: 8px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+  .input-group input[type=range] {
+    width: 100%;
+    accent-color: var(--fh-accent);
+    cursor: pointer;
+    margin-bottom: 4px;
+  }
+  .input-val {
+    font-size: 20px;
+    font-weight: 500;
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+  }
+  .input-hint { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 2px; }
+
+  /* commission selector */
+  .pct-selector { display: flex; gap: 8px; }
+  .pct-btn {
+    flex: 1;
+    padding: 8px 0;
+    border-radius: var(--fh-radius-sm);
+    border: 0.5px solid var(--fh-border);
+    background: transparent;
+    color: var(--fh-muted);
+    font-size: 15px;
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .pct-btn:hover { border-color: rgba(79,255,176,0.3); color: var(--fh-text); }
+  .pct-btn.active {
+    background: var(--fh-accent-dim);
+    border-color: rgba(79,255,176,0.4);
+    color: var(--fh-accent);
+  }
+
+  /* alert */
+  .calc-alert {
+    display: none;
+    background: rgba(255,184,79,0.08);
+    border: 0.5px solid rgba(255,184,79,0.25);
+    border-radius: var(--fh-radius-sm);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--fh-amber);
+    margin-bottom: 1.5rem;
+  }
+
+  /* summary strip */
+  .summary-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px;
+    background: var(--fh-border);
+    border: 0.5px solid var(--fh-border);
+    border-radius: var(--fh-radius-sm);
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .summary-cell {
+    background: var(--fh-dark);
+    padding: 1.1rem 1.25rem;
+  }
+  .summary-cell-label { font-size: 11px; color: var(--fh-muted); margin-bottom: 4px; font-family: 'DM Mono', monospace; letter-spacing: 0.04em; }
+  .summary-cell-val { font-size: 22px; font-weight: 500; color: #fff; font-family: 'DM Mono', monospace; }
+  .summary-cell-sub { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 2px; }
+
+  /* level cards */
+  .levels-title {
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    color: var(--fh-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .levels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .level-card {
+    background: var(--fh-dark);
+    border: 0.5px solid var(--fh-border);
+    border-radius: var(--fh-radius);
+    padding: 1.4rem;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .level-card:hover { border-color: rgba(255,255,255,0.18); }
+  .level-card.featured {
+    border-color: rgba(79,255,176,0.35);
+    background: rgba(79,255,176,0.03);
+  }
+  .featured-tag {
+    display: none;
+    position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+    font-size: 10px; font-family: 'DM Mono', monospace;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--fh-accent); color: var(--fh-dark);
+    padding: 3px 12px; border-radius: 100px;
+    white-space: nowrap;
+  }
+  .level-card.featured .featured-tag { display: block; }
+
+  .level-icon {
+    width: 36px; height: 36px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    margin-bottom: 1rem;
+  }
+  .icon-1 { background: var(--fh-amber-dim); }
+  .icon-2 { background: var(--fh-accent-dim); }
+  .icon-3 { background: var(--fh-blue-dim); }
+
+  .level-name { font-size: 15px; font-weight: 500; color: #fff; margin-bottom: 3px; }
+  .level-desc { font-size: 12px; color: var(--fh-muted); margin-bottom: 1.1rem; line-height: 1.5; }
+
+  .level-divider { border: none; border-top: 0.5px solid var(--fh-border); margin: 0.9rem 0; }
+
+  .level-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 13px;
+    margin: 5px 0;
+  }
+  .level-row-label { color: var(--fh-muted); }
+  .level-row-val { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--fh-text); }
+  .level-main-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--fh-accent);
+    margin-bottom: 2px;
+  }
+  .level-main-label { font-size: 11px; color: var(--fh-muted); margin-bottom: 0.75rem; }
+
+  /* ── HOW IT WORKS ── */
+  .how-section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 2rem 5rem;
+  }
+  .how-title {
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    color: var(--fh-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+  .how-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--fh-border);
+    border: 0.5px solid var(--fh-border);
+    border-radius: var(--fh-radius);
+    overflow: hidden;
+  }
+  .how-step {
+    background: var(--fh-mid);
+    padding: 1.5rem;
+  }
+  .how-step-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--fh-accent);
+    margin-bottom: 10px;
+    letter-spacing: 0.06em;
+  }
+  .how-step-title { font-size: 14px; font-weight: 500; color: #fff; margin-bottom: 6px; }
+  .how-step-body { font-size: 13px; color: var(--fh-muted); line-height: 1.55; }
+
+  /* ── CTA ── */
+  .cta-section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 2rem 6rem;
+    text-align: center;
+  }
+  .cta-box {
+    background: var(--fh-accent-dim);
+    border: 0.5px solid rgba(79,255,176,0.2);
+    border-radius: var(--fh-radius);
+    padding: 2.5rem 2rem;
+  }
+  .cta-box h2 { font-size: 1.6rem; font-weight: 300; color: #fff; margin-bottom: 0.75rem; }
+  .cta-box h2 strong { font-weight: 500; }
+  .cta-box p { font-size: 15px; color: var(--fh-muted); margin-bottom: 1.75rem; }
+  .cta-btn {
+    display: inline-block;
+    background: var(--fh-accent);
+    color: var(--fh-dark);
+    font-size: 15px;
+    font-weight: 500;
+    padding: 13px 32px;
+    border-radius: 100px;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+  }
+  .cta-sub { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 12px; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 0.5px solid var(--fh-border);
+    text-align: center;
+    padding: 1.5rem 2rem;
+    font-size: 12px;
+    color: rgba(255,255,255,0.2);
+    font-family: 'DM Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo">FH</div>
+    <span class="nav-name">Forhuman <span>· Jaime Preciado</span></span>
+  </div>
+  <span class="nav-pill">Programa de aliados</span>
+</nav>
+
+<section class="hero">
+  <p class="hero-eyebrow">Programa de aliados comerciales</p>
+  <h1>Gana cada mes<br><strong>por cada empresa que refiereas</strong></h1>
+  <p class="hero-sub">Conecta empresas con el servicio de administración de nómina de Forhuman y recibe un porcentaje mensual mientras el cliente permanezca activo.</p>
+</section>
+
+<section class="calc-section">
+  <div class="calc-card">
+    <p class="calc-title">Calcula tu ganancia estimada</p>
+
+    <div class="inputs-row">
+      <div class="input-group">
+        <label for="colab">Colaboradores en la empresa</label>
+        <input type="range" id="colab" min="10" max="300" step="1" value="30">
+        <div class="input-val" id="colab-out">30</div>
+        <div class="input-hint">Mínimo recomendado: 30</div>
+      </div>
+      <div class="input-group">
+        <label for="sueldo">Sueldo promedio mensual</label>
+        <input type="range" id="sueldo" min="5000" max="60000" step="500" value="15000">
+        <div class="input-val" id="sueldo-out">$15,000</div>
+        <div class="input-hint">Ajusta según el giro de la empresa</div>
+      </div>
+      <div class="input-group">
+        <label>Comisión del servicio</label>
+        <div class="pct-selector">
+          <button class="pct-btn" data-pct="6">6%</button>
+          <button class="pct-btn active" data-pct="7">7%</button>
+          <button class="pct-btn" data-pct="8">8%</button>
+        </div>
+        <div class="input-hint" style="margin-top: 10px;">Depende del volumen y perfil</div>
+      </div>
+    </div>
+
+    <div class="calc-alert" id="alert-bajo">
+      ⚠ Nómina pequeña — considera empresas con al menos 30 colaboradores para que la ganancia sea atractiva.
+    </div>
+
+    <div class="summary-strip">
+      <div class="summary-cell">
+        <div class="summary-cell-label">Nómina mensual estimada</div>
+        <div class="summary-cell-val" id="masa">$450,000</div>
+        <div class="summary-cell-sub">percepciones netas</div>
+      </div>
+      <div class="summary-cell">
+        <div class="summary-cell-label">Fee del servicio</div>
+        <div class="summary-cell-val" id="fee">$31,500</div>
+        <div class="summary-cell-sub">al 7% de la nómina</div>
+      </div>
+      <div class="summary-cell">
+        <div class="summary-cell-label">Pool disponible para ti</div>
+        <div class="summary-cell-val" id="pool">$31,500</div>
+        <div class="summary-cell-sub">según tu nivel de aliado</div>
+      </div>
+    </div>
+
+    <p class="levels-title">Tu ganancia según nivel</p>
+    <div class="levels-grid">
+
+      <div class="level-card">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+          <div class="level-icon icon-1" style="margin-bottom:0;">🤝</div>
+          <span style="font-family:'DM Mono',monospace; font-size:13px; color:var(--fh-amber); background:var(--fh-amber-dim); padding:4px 12px; border-radius:100px; border:0.5px solid rgba(255,184,79,0.25);">10% del fee</span>
+        </div>
+        <div class="level-name">Conector</div>
+        <div class="level-desc">Pasas el contacto. Nosotros hacemos el resto.</div>
+        <div class="level-main-val" id="n1-mes">$X</div>
+        <div class="level-main-label">por mes durante 6 meses</div>
+        <hr class="level-divider">
+        <div class="level-row">
+          <span class="level-row-label">Total en 6 meses</span>
+          <span class="level-row-val" id="n1-total">$X</span>
+        </div>
+      </div>
+
+      <div class="level-card featured">
+        <div class="featured-tag">Más popular</div>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+          <div class="level-icon icon-2" style="margin-bottom:0;">📅</div>
+          <span style="font-family:'DM Mono',monospace; font-size:13px; color:var(--fh-accent); background:var(--fh-accent-dim); padding:4px 12px; border-radius:100px; border:0.5px solid rgba(79,255,176,0.25);">20% del fee</span>
+        </div>
+        <div class="level-name">Promotor</div>
+        <div class="level-desc">Agendas la cita y confirmas que el prospecto llegue.</div>
+        <div class="level-main-val" id="n2-mes">$X</div>
+        <div class="level-main-label">por mes durante 12 meses</div>
+        <hr class="level-divider">
+        <div class="level-row">
+          <span class="level-row-label">Total en 12 meses</span>
+          <span class="level-row-val" id="n2-total">$X</span>
+        </div>
+      </div>
+
+      <div class="level-card">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+          <div class="level-icon icon-3" style="margin-bottom:0;">🚀</div>
+          <span style="font-family:'DM Mono',monospace; font-size:13px; color:var(--fh-blue); background:var(--fh-blue-dim); padding:4px 12px; border-radius:100px; border:0.5px solid rgba(79,179,255,0.25);">40% del fee</span>
+        </div>
+        <div class="level-name">Socio comercial</div>
+        <div class="level-desc">Traes citas calificadas de forma recurrente o acompañas el cierre.</div>
+        <div class="level-main-val" id="n3-mes">$X</div>
+        <div class="level-main-label">por mes durante 12 meses</div>
+        <hr class="level-divider">
+        <div class="level-row">
+          <span class="level-row-label">Total en 12 meses</span>
+          <span class="level-row-val" id="n3-total">$X</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="how-section">
+  <p class="how-title">¿Cómo funciona?</p>
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-step-num">01</div>
+      <div class="how-step-title">Identificas una empresa</div>
+      <div class="how-step-body">Conoces a alguien que administra nómina con dolor de cabeza o pagando de más.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">02</div>
+      <div class="how-step-title">Nos conectas</div>
+      <div class="how-step-body">Según tu nivel de involucramiento, pasas el contacto, agendas la cita o acompañas el cierre.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">03</div>
+      <div class="how-step-title">Nosotros cerramos y operamos</div>
+      <div class="how-step-body">Forhuman se encarga de la presentación, el contrato y la operación mensual.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">04</div>
+      <div class="how-step-title">Recibes tu pago mensual</div>
+      <div class="how-step-body">Cada mes que el cliente permanezca activo, tú recibes tu porcentaje. Sin techo.</div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-box">
+    <h2>¿Conoces una empresa<br><strong>que podría beneficiarse?</strong></h2>
+    <p>Habla con Jaime Preciado directamente. En 24 horas definimos tu nivel y arrancamos.</p>
+    <div class="cta-sub" style="margin-top:0;">Sin contratos. Sin cuotas. Solo ganas cuando el cliente entra.</div>
+  </div>
+</section>
+
+<footer>
+  Forhuman · Jaime Preciado · Programa de aliados comerciales 2026
+</footer>
+
+<script>
+  let pct = 7;
+
+  const fmt = v => '$' + Math.round(v).toLocaleString('es-MX');
+
+  function calc() {
+    const colab = parseInt(document.getElementById('colab').value);
+    const sueldo = parseInt(document.getElementById('sueldo').value);
+
+    document.getElementById('colab-out').textContent = colab;
+    document.getElementById('sueldo-out').textContent = fmt(sueldo);
+
+    const masa = colab * sueldo;
+    const fee = masa * (pct / 100);
+    const pool = fee;
+
+    document.getElementById('masa').textContent = fmt(masa);
+    document.getElementById('fee').textContent = fmt(fee);
+    document.getElementById('pool').textContent = fmt(pool);
+    document.getElementById('fee').closest('.summary-cell').querySelector('.summary-cell-sub').textContent = 'al ' + pct + '% de la nómina';
+
+    const alert = document.getElementById('alert-bajo');
+    alert.style.display = colab < 30 ? 'block' : 'none';
+
+    const n1 = pool * 0.10;
+    const n2 = pool * 0.20;
+    const n3 = pool * 0.40;
+
+    document.getElementById('n1-mes').textContent = fmt(n1);
+    document.getElementById('n1-total').textContent = fmt(n1 * 6);
+    document.getElementById('n2-mes').textContent = fmt(n2);
+    document.getElementById('n2-total').textContent = fmt(n2 * 12);
+    document.getElementById('n3-mes').textContent = fmt(n3);
+    document.getElementById('n3-total').textContent = fmt(n3 * 12);
+  }
+
+  document.getElementById('colab').addEventListener('input', calc);
+  document.getElementById('sueldo').addEventListener('input', calc);
+
+  document.querySelectorAll('.pct-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.pct-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      pct = parseInt(btn.dataset.pct);
+      calc();
+    });
+  });
+
+  calc();
+</script>
+</body>
+</html>
